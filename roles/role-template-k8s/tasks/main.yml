@@ -1,0 +1,24 @@
+- name: create chart
+  file:
+    path: /root/{{ item }}
+    state: directory
+    recurse: yes
+  with_items:
+    - 'charts/{{ your_application_helm_release }}/templates'
+
+- name: put templates
+  template:
+    src: "{{ item.src }}"
+    dest: "/root/charts/{{ your_application_helm_release }}/{{ item.dest }}"
+  with_items:
+    - { src: 'helmignore', dest: '.helmignore' }
+    - { src: 'Chart.yaml', dest: 'Chart.yaml' }
+    - { src: 'values.yaml', dest: 'values.yaml' }
+    - { src: 'your-application-deployment.yml', dest: 'templates/your-application-deployment.yml' }
+    - { src: 'your-application-service.yml', dest: 'templates/your-application-service.yml' }
+
+- name: upgrade {{ your_application_helm_release }} release using a Helm chart
+  shell: >
+    helm upgrade {{ your_application_helm_release }} /root/charts/{{ your_application_helm_release }} \
+    --install --recreate-pods  --namespace {{ your_application_namespace }} \
+    -f /root/charts/{{ your_application_helm_release }}/values.yaml

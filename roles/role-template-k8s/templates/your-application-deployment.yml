@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ your_application_helm_release }}
+  labels:
+    app: {{ your_application_helm_release }}
+spec:
+  replicas: {{ replicas }}
+  selector:
+    matchLabels:
+      app: {{ your_application_helm_release }}
+  template:
+    metadata:
+      name: {{ your_application_helm_release }}
+      labels:
+        app: {{ your_application_helm_release }}
+    spec:
+      containers:
+        - name: {{ your_application_helm_release }}
+          image: "{{ docker_image_registry_or_repo_name }}/your-application-image-name:{{ image_version }}"
+          lifecycle:
+             postStart:
+               exec:
+                 command: ["/bin/sh", "-c", "echo 'I\'m fine"]
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+          ports:
+          - containerPort: your_application_port
+          livenessProbe:
+            tcpSocket:
+              port: Liveness_Port
+            initialDelaySeconds: DelaySeconds
+            periodSeconds: periodSeconds
+            successThreshold: successThreshold
+            timeoutSeconds: timeoutSeconds
+          readinessProbe:
+            tcpSocket:
+              port: ReadinessPort
+            periodSeconds: periodSeconds
+            successThreshold: successThreshold
+            timeoutSeconds: timeoutSeconds
+          env:
+            - name: ENV_VAR_NAME_TO_SECRET
+              valueFrom:
+                  secretKeyRef:
+                    name: secrets-name
+                    key: value-you-want-to-use
+            - name: VAR_NAME
+              value: "meaning_you_want_to_use_on_all_of_environments"
+            - name: VARIABLE_VAR_NAME
+              value: "{{ meaning_you_want_to_change_for_each_of_environments }}"

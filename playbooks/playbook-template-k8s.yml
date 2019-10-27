@@ -1,0 +1,12 @@
+---
+- hosts: kube-master
+  become: yes
+  become_user: root
+  vars:
+    meaning_you_want_to_change_for_each_of_environments: staging-meaning
+    nodeport: your_nodeport
+    your_application_helm_release: your-application
+  roles:
+    - { role: helm }
+    - { role: k8s-namespace, k8s_namespace: "workshop" }
+    - { role: your-application, your_application_namespace: "workshop" }

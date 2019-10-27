@@ -1,0 +1,13 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ your_application_helm_release }}
+spec:
+  selector:
+    app: {{ your_application_helm_release }}
+  ports:
+    - name: "name_of_port"
+      port: your_application_port
+      nodePort: {{ nodeport }}
+  type: NodePort
