@@ -1,0 +1,13 @@
+node01 ansible_host=*some_value*
+
+node02 ansible_host=*some_value*
+
+node03 ansible_host=*some_value*
+
+[kube-node]
+node01
+node02
+node03
+
+[kube-master]
+node02

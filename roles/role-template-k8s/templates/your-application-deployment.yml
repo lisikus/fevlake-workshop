@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: {{ your_application_helm_release }}
-          image: "{{ docker_image_registry_or_repo_name }}/your-application-image-name:{{ image_version }}"
+          image: "{{ docker_image_registry_or_repo_name }}/your-application-image-name:{{ image_version | default("latest") }}"
           lifecycle:
              postStart:
                exec:

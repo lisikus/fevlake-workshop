@@ -1,0 +1,27 @@
+- name: download Helm
+  get_url: url=https://storage.googleapis.com/kubernetes-helm/helm-{{ helm_version }}-linux-amd64.tar.gz dest=/root/helm-{{ helm_version }}-linux-amd64.tar.gz
+
+- name: mkdir /opt/helm
+  file: dest=/opt/helm state=directory
+
+- name: unpack Helm
+  unarchive: copy=no src="/root/helm-{{ helm_version }}-linux-amd64.tar.gz" dest=/opt/helm/
+
+- name: link helm to /usr/local/bin
+  file: state=link src=/opt/helm/linux-amd64/helm dest=/usr/local/bin/helm
+
+- name: put an SA and a CRB description file
+  template: src=rbac-sa.yml dest=/root/rbac-sa.yml
+
+- name: check if a cluster role binding exists
+  shell: kubectl get clusterrolebinding | grep tiller
+  register: result
+  ignore_errors: true
+  changed_when: false
+
+- name: create a SA and a CRB for it
+  shell: kubectl create -f /root/rbac-sa.yml
+  when: result is failed
+
+- name: init Helm
+  shell: helm init --wait --service-account tiller

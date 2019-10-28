@@ -1,0 +1,9 @@
+- name: check if a namespace called "{{ k8s_namespace }}" exists
+  shell: export KUBECONFIG=/etc/kubernetes/admin.conf && kubectl get namespace {{ k8s_namespace }}
+  ignore_errors: yes
+  register: result
+  changed_when: false
+
+- name: create a namespace called "{{ k8s_namespace }}"
+  shell: export KUBECONFIG=/etc/kubernetes/admin.conf && kubectl create namespace {{ k8s_namespace }}
+  when: result is failed
