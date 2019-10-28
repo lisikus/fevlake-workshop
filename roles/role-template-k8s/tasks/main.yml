@@ -16,6 +16,7 @@
     - { src: 'values.yaml', dest: 'values.yaml' }
     - { src: 'your-application-deployment.yml', dest: 'templates/your-application-deployment.yml' }
     - { src: 'your-application-service.yml', dest: 'templates/your-application-service.yml' }
+    - { src: 'your-application-configmap.yml', dest: 'templates/your-application-configmap.yml' }
 
 - name: upgrade {{ your_application_helm_release }} release using a Helm chart
   shell: >

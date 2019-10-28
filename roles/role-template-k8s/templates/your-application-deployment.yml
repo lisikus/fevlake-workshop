@@ -56,3 +56,11 @@ spec:
               value: "meaning_you_want_to_use_on_all_of_environments"
             - name: VARIABLE_VAR_NAME
               value: "{{ meaning_you_want_to_change_for_each_of_environments }}"
+          volumeMounts:
+            - name: app-conf
+              mountPath: /conf.yml
+              subPath: conf.yml
+      volumes:
+        - name: app-conf
+          configMap:
+            name: app-conf-{{ identificator }}

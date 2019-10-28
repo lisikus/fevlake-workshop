@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: consumer-app-{{ identificator }}
+data:
+  conf.yml: |-
+    some_data:
+      value
+
+    nested_data:
+      data1:
+        value1
+      data2:
+        value2
